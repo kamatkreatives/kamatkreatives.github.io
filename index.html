@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kamat Kreatives — Senior Graphic Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #0a0a0a;
+    --paper: #f2ede6;
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --red: #d63c2f;
+    --white: #fafaf8;
+    --grey: #8a8a8a;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+
+  body {
+    background: var(--ink);
+    color: var(--white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ─── CURSOR ─── */
+  #cursor {
+    position: fixed; top: 0; left: 0; z-index: 9999;
+    pointer-events: none;
+    mix-blend-mode: difference;
+  }
+  #cursor-dot {
+    position: absolute; width: 8px; height: 8px;
+    background: var(--white); border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s;
+  }
+  #cursor-ring {
+    position: absolute; width: 40px; height: 40px;
+    border: 1px solid var(--white); border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, transform 0.08s;
+    opacity: 0.6;
+  }
+  body:has(a:hover) #cursor-ring,
+  body:has(button:hover) #cursor-ring {
+    width: 64px; height: 64px;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9998;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 60px;
+    mix-blend-mode: normal;
+  }
+  nav::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.9), transparent);
+    pointer-events: none;
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--white);
+    text-decoration: none;
+    position: relative;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links {
+    display: flex; gap: 40px; list-style: none; position: relative;
+  }
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--grey);
+    text-decoration: none;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ─── HERO ─── */
+  #hero {
+    height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 60px 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 70% 40%, rgba(201,168,76,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 20% 80%, rgba(214,60,47,0.06) 0%, transparent 60%),
+      var(--ink);
+  }
+  .hero-line {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    overflow: hidden; pointer-events: none;
+  }
+  .hero-line::before {
+    content: '';
+    position: absolute; top: -50%; left: 55%;
+    width: 1px; height: 200%;
+    background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.15), transparent);
+    transform: rotate(12deg);
+  }
+  .hero-counter {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    margin-bottom: 24px;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.3s forwards;
+  }
+  .hero-title {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-title h1 {
+    font-family: var(--font-display);
+    font-size: clamp(72px, 13vw, 200px);
+    line-height: 0.88;
+    letter-spacing: -2px;
+    color: var(--white);
+    opacity: 0;
+    transform: translateY(80px);
+    animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+  }
+  .hero-title h1 .outline {
+    -webkit-text-stroke: 1px var(--white);
+    color: transparent;
+  }
+  .hero-title h1 .gold { color: var(--gold); }
+  .hero-sub {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: 40px;
+    position: relative;
+  }
+  .hero-desc {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--grey);
+    line-height: 1.7;
+    max-width: 320px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1s forwards;
+  }
+  .hero-scroll {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.2s forwards;
+  }
+  .hero-scroll span {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--grey);
+    writing-mode: vertical-rl;
+  }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: pulse-line 2s ease infinite;
+  }
+  .hero-badge {
+    position: absolute;
+    right: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.3);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.4s forwards, spin-slow 20s linear infinite;
+  }
+  .hero-badge svg {
+    width: 120px; height: 120px;
+    animation: spin-slow 20s linear infinite;
+  }
+
+  /* ─── MARQUEE ─── */
+  .marquee-section {
+    padding: 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    position: relative;
+    background: rgba(255,255,255,0.02);
+  }
+  .marquee-track {
+    display: flex;
+    animation: marquee 22s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-track:hover { animation-play-state: paused; }
+  .marquee-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 22px 50px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 5px;
+    color: var(--grey);
+    text-transform: uppercase;
+    transition: color 0.3s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .marquee-item:hover { color: var(--gold); }
+  .marquee-dot {
+    width: 4px; height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ─── ABOUT ─── */
+  #about {
+    padding: 140px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+  }
+  .about-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .about-label::before {
+    content: '';
+    display: block; width: 40px; height: 1px;
+    background: var(--gold);
+  }
+  .about-headline {
+    font-family: var(--font-display);
+    font-size: clamp(44px, 6vw, 88px);
+    line-height: 0.92;
+    color: var(--white);
+  }
+  .about-headline .stroke {
+    -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+    color: transparent;
+  }
+  .about-right { display: flex; flex-direction: column; gap: 40px; }
+  .about-text {
+    font-size: 16px;
+    line-height: 1.9;
+    color: rgba(250,250,248,0.6);
+    font-weight: 400;
+  }
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .stat-box {
+    padding: 32px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .stat-box:hover { background: rgba(201,168,76,0.06); }
+  .stat-box::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 2px; height: 0;
+    background: var(--gold);
+    transition: height 0.4s;
+  }
+  .stat-box:hover::before { height: 100%; }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 52px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--grey);
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  /* ─── WORK SECTION ─── */
+  #work {
+    padding: 100px 60px;
+    position: relative;
+  }
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 70px;
+  }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .section-label::before {
+    content: '';
+    display: block; width: 40px; height: 1px;
+    background: var(--gold);
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 7vw, 100px);
+    line-height: 0.9;
+    color: var(--white);
+  }
+  .section-cta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--grey);
+    text-decoration: none;
+    border-bottom: 1px solid var(--grey);
+    padding-bottom: 4px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .section-cta:hover { color: var(--gold); border-color: var(--gold); }
+
+  /* ─── PROJECT GRID ─── */
+  .project-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .project-card {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    cursor: none;
+    background: rgba(255,255,255,0.02);
+  }
+  .project-card.wide { grid-column: span 2; aspect-ratio: 16/6; }
+  .project-card.tall { aspect-ratio: 3/4; }
+  .card-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .project-card:hover .card-bg { transform: scale(1.06); }
+  .card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.2) 50%, transparent 100%);
+    opacity: 0.6;
+    transition: opacity 0.4s;
+  }
+  .project-card:hover .card-overlay { opacity: 0.85; }
+  .card-content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 36px;
+    transform: translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .project-card:hover .card-content { transform: translateY(0); }
+  .card-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .card-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.5vw, 52px);
+    line-height: 1;
+    color: var(--white);
+  }
+  .card-brand {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--grey);
+    margin-top: 8px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.4s 0.1s, transform 0.4s 0.1s;
+  }
+  .project-card:hover .card-brand { opacity: 1; transform: translateY(0); }
+  .card-arrow {
+    position: absolute;
+    top: 30px; right: 30px;
+    width: 44px; height: 44px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.8);
+    transition: opacity 0.3s, transform 0.3s, border-color 0.3s;
+  }
+  .project-card:hover .card-arrow {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+    border-color: var(--gold);
+  }
+  .card-arrow svg { width: 16px; height: 16px; stroke: var(--gold); fill: none; }
+
+  /* Individual card backgrounds */
+  .card-salesforce .card-bg { background: linear-gradient(135deg, #1a2a4a 0%, #0d1b33 100%); }
+  .card-sony .card-bg { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); }
+  .card-tseries .card-bg { background: linear-gradient(135deg, #3d0a0a 0%, #1a0505 100%); }
+  .card-jiocinema .card-bg { background: linear-gradient(135deg, #0d2744 0%, #061220 100%); }
+  .card-zee5 .card-bg { background: linear-gradient(135deg, #1a0f2e 0%, #0d0818 100%); }
+  .card-blinkit .card-bg { background: linear-gradient(135deg, #1f2d0a 0%, #0f1705 100%); }
+  .card-boltfit .card-bg { background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%); }
+  .card-mg .card-bg { background: linear-gradient(135deg, #1a0808 0%, #0d0404 100%); }
+  .card-dreamforce .card-bg { background: linear-gradient(135deg, #0a1628 0%, #060e18 100%); }
+
+  /* SVG Brand Icons inside cards */
+  .card-icon {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.08;
+    transition: opacity 0.4s, transform 0.4s;
+    pointer-events: none;
+  }
+  .project-card:hover .card-icon { opacity: 0.15; transform: translate(-50%, -50%) scale(1.1); }
+
+  /* Visual design elements per card */
+  .card-geo {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .card-geo::before, .card-geo::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+  }
+  .card-salesforce .card-geo::before {
+    width: 200px; height: 200px;
+    top: -60px; right: -60px;
+    background: radial-gradient(circle, rgba(0,161,224,0.15) 0%, transparent 70%);
+  }
+  .card-tseries .card-geo::before {
+    width: 300px; height: 300px;
+    bottom: -100px; right: -100px;
+    background: radial-gradient(circle, rgba(214,60,47,0.2) 0%, transparent 70%);
+  }
+  .card-jiocinema .card-geo::before {
+    width: 250px; height: 250px;
+    top: -80px; left: -80px;
+    background: radial-gradient(circle, rgba(0,100,200,0.2) 0%, transparent 70%);
+  }
+  .card-zee5 .card-geo::before {
+    width: 200px; height: 200px;
+    top: -60px; right: -60px;
+    background: radial-gradient(circle, rgba(150,50,255,0.2) 0%, transparent 70%);
+  }
+  .card-blinkit .card-geo::before {
+    width: 250px; height: 250px;
+    bottom: -80px; right: -80px;
+    background: radial-gradient(circle, rgba(255,204,0,0.15) 0%, transparent 70%);
+  }
+
+  /* ─── SERVICES ─── */
+  #services {
+    padding: 120px 60px;
+    background: var(--paper);
+    color: var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  #services::before {
+    content: 'KREATIVES';
+    position: absolute;
+    bottom: -20px; right: -20px;
+    font-family: var(--font-display);
+    font-size: 200px;
+    color: rgba(10,10,10,0.04);
+    line-height: 1;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .services-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 60px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .services-label::before {
+    content: '';
+    display: block; width: 40px; height: 1px;
+    background: var(--red);
+  }
+  .services-list { display: flex; flex-direction: column; gap: 0; }
+  .service-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    align-items: center;
+    gap: 40px;
+    padding: 36px 0;
+    border-top: 1px solid rgba(10,10,10,0.1);
+    cursor: none;
+    transition: padding 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-item::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 0;
+  }
+  .service-item:hover::before { transform: scaleX(1); }
+  .service-item:hover { padding-left: 20px; }
+  .service-item > * { position: relative; z-index: 1; }
+  .service-num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    color: rgba(10,10,10,0.2);
+    transition: color 0.4s;
+  }
+  .service-item:hover .service-num { color: var(--gold); }
+  .service-name {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 52px);
+    color: var(--ink);
+    transition: color 0.4s;
+    letter-spacing: -1px;
+  }
+  .service-item:hover .service-name { color: var(--white); }
+  .service-tags {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;
+  }
+  .service-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid rgba(10,10,10,0.15);
+    color: rgba(10,10,10,0.5);
+    border-radius: 2px;
+    transition: border-color 0.4s, color 0.4s;
+  }
+  .service-item:hover .service-tag { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); }
+  .service-item:last-child { border-bottom: 1px solid rgba(10,10,10,0.1); }
+
+  /* ─── BRANDS GRID ─── */
+  #brands {
+    padding: 100px 60px;
+    position: relative;
+  }
+  .brands-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    margin-top: 60px;
+    background: rgba(255,255,255,0.05);
+  }
+  .brand-cell {
+    background: var(--ink);
+    padding: 50px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+  }
+  .brand-cell::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .brand-cell:hover { background: rgba(201,168,76,0.04); }
+  .brand-cell:hover::before { opacity: 1; }
+  .brand-logo-box {
+    width: 60px; height: 60px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .brand-name {
+    font-family: var(--font-display);
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    transition: color 0.4s;
+    text-align: center;
+  }
+  .brand-cell:hover .brand-name { color: var(--gold); }
+  .brand-type {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.15);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  /* Brand SVG icons */
+  .brand-icon { opacity: 0.3; transition: opacity 0.4s, transform 0.4s; }
+  .brand-cell:hover .brand-icon { opacity: 0.8; transform: scale(1.1); }
+
+  /* ─── CONTACT ─── */
+  #contact {
+    padding: 120px 60px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .contact-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 50% 100%, rgba(201,168,76,0.1) 0%, transparent 70%);
+  }
+  .contact-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .contact-headline {
+    font-family: var(--font-display);
+    font-size: clamp(60px, 10vw, 150px);
+    line-height: 0.9;
+    color: var(--white);
+    margin-bottom: 60px;
+    position: relative;
+  }
+  .contact-headline .outline {
+    -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+    color: transparent;
+  }
+  .contact-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .contact-link {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--grey);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+    transition: color 0.3s;
+  }
+  .contact-link:hover { color: var(--gold); }
+  .contact-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; }
+  .contact-big-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 50px;
+    border: 1px solid rgba(255,255,255,0.15);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.4s, border-color 0.4s;
+    margin-bottom: 60px;
+  }
+  .contact-big-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: -1;
+  }
+  .contact-big-btn:hover { color: var(--ink); border-color: var(--gold); }
+  .contact-big-btn:hover::before { transform: scaleX(1); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 40px 60px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    letter-spacing: 4px;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--gold); }
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(80px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes pulse-line {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+  @keyframes glitch {
+    0%, 100% { clip-path: inset(0 0 100% 0); transform: translateX(0); }
+    20% { clip-path: inset(20% 0 60% 0); transform: translateX(-4px); }
+    40% { clip-path: inset(50% 0 30% 0); transform: translateX(4px); }
+    60% { clip-path: inset(10% 0 70% 0); transform: translateX(-2px); }
+    80% { clip-path: inset(80% 0 5% 0); transform: translateX(2px); }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* Parallax layers */
+  .parallax-slow { will-change: transform; }
+  .parallax-fast { will-change: transform; }
+
+  /* Glitch text effect on hover */
+  .glitch-wrap { position: relative; display: inline-block; }
+  .glitch-wrap::before, .glitch-wrap::after {
+    content: attr(data-text);
+    position: absolute; top: 0; left: 0;
+    font-family: var(--font-display);
+    color: var(--gold);
+    opacity: 0;
+  }
+  .glitch-wrap:hover::before {
+    animation: glitch 0.6s linear;
+    color: var(--red);
+    opacity: 0.7;
+    left: 2px;
+  }
+  .glitch-wrap:hover::after {
+    animation: glitch 0.6s linear 0.05s;
+    color: var(--gold);
+    opacity: 0.7;
+    left: -2px;
+  }
+
+  /* Loading screen */
+  #loader {
+    position: fixed; inset: 0; z-index: 10000;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .loader-logo {
+    font-family: var(--font-display);
+    font-size: 48px;
+    letter-spacing: 8px;
+    color: var(--white);
+    overflow: hidden;
+    display: inline-block;
+  }
+  .loader-logo span { color: var(--gold); }
+  .loader-bar-wrap {
+    width: 200px;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .loader-bar {
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--gold);
+    animation: load-bar 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .loader-pct {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    opacity: 0;
+    animation: fadeUp 0.3s ease 0.5s forwards;
+  }
+  @keyframes load-bar {
+    0% { left: -100%; }
+    100% { left: 0%; }
+  }
+
+  /* Horizontal ticker at very top */
+  .ticker-top {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+    background: var(--gold);
+    padding: 6px 0;
+    overflow: hidden;
+    display: none;
+  }
+  .ticker-inner {
+    display: flex;
+    animation: marquee 15s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-item {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 0 30px;
+    font-weight: 500;
+  }
+
+  /* Page progress bar */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--gold), var(--red));
+    z-index: 9997;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">KAMAT<span>.</span></div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-pct" id="loader-pct">Loading...</div>
+</div>
+
+<!-- PROGRESS -->
+<div id="progress-bar"></div>
+
+<!-- CURSOR -->
+<div id="cursor">
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">KAMAT<span>.</span>K</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#brands">Brands</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-line"></div>
+
+  <div class="hero-counter">[ 01 — PORTFOLIO 2024 ]</div>
+
+  <div class="hero-title parallax-slow">
+    <h1>
+      <span class="glitch-wrap" data-text="KAMAT">KAMAT</span><br>
+      <span class="outline">KREA</span><span class="gold">TIVES</span>
+    </h1>
+  </div>
+
+  <div class="hero-sub">
+    <p class="hero-desc">Senior graphic designer crafting identities for Fortune 500s and cultural icons. Where strategy meets bold visual language.</p>
+
+    <!-- Rotating badge -->
+    <div class="hero-badge" style="position: relative; width: 130px; height: 130px; transform: none; opacity: 0; animation: fadeUp 0.8s ease 1.4s forwards;">
+      <svg viewBox="0 0 130 130" style="position:absolute;inset:0;animation:spin-slow 15s linear infinite;">
+        <defs>
+          <path id="circle-text" d="M 65,65 m -45,0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0"/>
+        </defs>
+        <text font-family="'DM Mono',monospace" font-size="9" fill="rgba(201,168,76,0.7)" letter-spacing="3.5">
+          <textPath href="#circle-text">SENIOR GRAPHIC DESIGNER • KAMAT KREATIVES •  </textPath>
+        </text>
+      </svg>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.8)" stroke-width="1.5">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <!-- doubled for seamless loop -->
+    <div class="marquee-item"><div class="marquee-dot"></div>Salesforce</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Sony</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>T-Series</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>JioCinema</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Zee5</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>BoltFit</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Blinkit</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>MG</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>YouTube</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Dreamforce</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Salesforce</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Sony</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>T-Series</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>JioCinema</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Zee5</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>BoltFit</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Blinkit</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>MG</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>YouTube</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Dreamforce</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-left">
+    <div class="about-label reveal">About Me</div>
+    <h2 class="about-headline reveal reveal-delay-1">
+      DESIGN<br><span class="stroke">THAT</span><br>SPEAKS
+    </h2>
+  </div>
+  <div class="about-right">
+    <p class="about-text reveal">
+      10+ years shaping visual narratives for India's biggest brands and global corporations.
+      From Dreamforce stages to streaming platforms — every pixel placed with intent.
+      Posters, brand systems, web experiences, campaign identities.
+    </p>
+    <div class="about-stats reveal reveal-delay-1">
+      <div class="stat-box">
+        <div class="stat-num">10+</div>
+        <div class="stat-label">Years Active</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">50+</div>
+        <div class="stat-label">Brands Served</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">200+</div>
+        <div class="stat-label">Projects</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">9</div>
+        <div class="stat-label">Major Clients</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label">Selected Work</div>
+      <h2 class="section-title">PROJECTS</h2>
+    </div>
+    <a href="#contact" class="section-cta">View All</a>
+  </div>
+
+  <div class="project-grid reveal">
+
+    <!-- Salesforce Dreamforce — wide -->
+    <div class="project-card wide card-salesforce">
+      <div class="card-bg"></div>
+      <div class="card-geo"></div>
+      <div class="card-overlay"></div>
+      <div class="card-icon">
+        <svg width="220" height="220" viewBox="0 0 100 100" fill="white">
+          <ellipse cx="50" cy="50" rx="40" ry="40" fill="none" stroke="white" stroke-width="3"/>
+          <path d="M30 50 Q40 30 50 50 Q60 70 70 50" fill="none" stroke="white" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <div class="card-tag">Enterprise • Event Design</div>
+        <div class="card-title">Dreamforce 2023</div>
+        <div class="card-brand">Salesforce — World's Largest Tech Conference Visual Identity</div>
+      </div>
+      <div class="card-arrow">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+
+    <!-- Sony -->
+    <div class="project-card tall card-sony">
+      <div class="card-bg"></div>
+      <div class="card-geo"></div>
+      <div class="card-overlay"></div>
+      <div class="card-icon">
+        <svg width="160" height="80" viewBox="0 0 160 80" fill="white">
+          <text x="10" y="60" font-family="serif" font-size="52" font-weight="bold" fill="white">SONY</text>
+        </svg>
+      </div>
+      <div class="card-content">
+        <div class="card-tag">Consumer Electronics</div>
+        <div class="card-title">Sony Campaign</div>
+        <div class="card-brand">Product Launch Identity System</div>
+      </div>
+      <div class="card-arrow">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+
+    <!-- T-Series -->
+    <div class="project-card card-tseries">
+      <div class="card-bg"></div>
+      <div class="card-geo"></div>
+      <div class="card-overlay"></div>
+      <div class="card-icon">
+        <svg width="160" height="120" viewBox="0 0 160 120" fill="white">
+          <rect x="10" y="10" width="140" height="100" rx="8" fill="none" stroke="white" stroke-width="3"/>
+          <text x="20" y="72" font-family="serif" font-size="56" font-weight="bold" fill="white">T-S</text>
+        </svg>
+      </div>
+      <div class="card-content">
+        <div class="card-tag">Music • Entertainment</div>
+        <div class="card-title">T-Series Visual</div>
+        <div class="card-brand">Album Art & Campaign Design</div>
+      </div>
+      <div class="card-arrow">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+
+    <!-- JioCinema -->
+    <div class="project-card card-jiocinema">
+      <div class="card-bg"></div>
+      <div class="card-geo"></div>
+      <div class="card-overlay"></div>
+      <div class="card-icon">
+        <svg width="160" height="120" viewBox="0 0 160 120" fill="none">
+          <circle cx="80" cy="60" r="45" stroke="white" stroke-width="3"/>
+          <polygon points="68,45 100,60 68,75" fill="white"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <div class="card-tag">OTT • Streaming</div>
+        <div class="card-title">JioCinema</div>
+        <div class="card-brand">Platform Branding & Key Art</div>
+      </div>
+      <div class="card-arrow">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+
+    <!-- Zee5 -->
+    <div class="project-card card-zee5">
+      <div class="card-bg"></div>
+      <div class="card-geo"></div>
+      <div class="card-overlay"></div>
+      <div class="card-icon">
+        <svg width="160" height="100" viewBox="0 0 160 100">
+          <text x="10" y="80" font-family="sans-serif" font-size="70" font-weight="900" fill="white">ZEE5</text>
+        </svg>
+      </div>
+      <div class="card-content">
+        <div class="card-tag">OTT • Digital</div>
+        <div class="card-title">Zee5 Platform</div>
+        <div class="card-brand">Show Posters & Campaign Series</div>
+      </div>
+      <div class="card-arrow">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+
+    <!-- Blinkit -->
+    <div class="project-card card-blinkit">
+      <div class="card-bg"></div>
+      <div class="card-geo"></div>
+      <div class="card-overlay"></div>
+      <div class="card-icon">
+        <svg width="100" height="120" viewBox="0 0 100 120">
+          <polygon points="50,5 95,30 95,90 50,115 5,90 5,30" fill="none" stroke="rgba(255,204,0,0.6)" stroke-width="2"/>
+          <text x="22" y="68" font-family="sans-serif" font-size="22" font-weight="900" fill="white">blink</text>
+        </svg>
+      </div>
+      <div class="card-content">
+        <div class="card-tag">Quick Commerce</div>
+        <div class="card-title">Blinkit</div>
+        <div class="card-brand">Brand Refresh & Digital Assets</div>
+      </div>
+      <div class="card-arrow">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+
+    <!-- BoltFit + MG — wide -->
+    <div class="project-card wide card-boltfit">
+      <div class="card-bg"></div>
+      <div class="card-overlay"></div>
+      <div class="card-icon">
+        <svg width="200" height="120" viewBox="0 0 200 120">
+          <polygon points="100,5 130,55 115,55 130,115 70,55 90,55" fill="rgba(100,200,255,0.4)"/>
+          <text x="140" y="70" font-family="sans-serif" font-size="36" font-weight="900" fill="white">BOLT</text>
+        </svg>
+      </div>
+      <div class="card-content">
+        <div class="card-tag">Fitness • Automotive • Creators</div>
+        <div class="card-title">BoltFit × MG × YouTube</div>
+        <div class="card-brand">Multi-Platform Campaign Design & Creator Brand Kits</div>
+      </div>
+      <div class="card-arrow">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-label reveal">What I Do</div>
+
+  <div class="services-list">
+    <div class="service-item reveal">
+      <div class="service-num">01</div>
+      <div class="service-name">Brand Identity</div>
+      <div class="service-tags">
+        <span class="service-tag">Logo</span>
+        <span class="service-tag">Guidelines</span>
+        <span class="service-tag">Systems</span>
+      </div>
+    </div>
+    <div class="service-item reveal reveal-delay-1">
+      <div class="service-num">02</div>
+      <div class="service-name">Website Design</div>
+      <div class="service-tags">
+        <span class="service-tag">UI/UX</span>
+        <span class="service-tag">Interaction</span>
+        <span class="service-tag">Prototypes</span>
+      </div>
+    </div>
+    <div class="service-item reveal reveal-delay-2">
+      <div class="service-num">03</div>
+      <div class="service-name">Campaign Posters</div>
+      <div class="service-tags">
+        <span class="service-tag">Print</span>
+        <span class="service-tag">OOH</span>
+        <span class="service-tag">Digital</span>
+      </div>
+    </div>
+    <div class="service-item reveal reveal-delay-3">
+      <div class="service-num">04</div>
+      <div class="service-name">Event Creatives</div>
+      <div class="service-tags">
+        <span class="service-tag">Stage</span>
+        <span class="service-tag">Wayfinding</span>
+        <span class="service-tag">Motion</span>
+      </div>
+    </div>
+    <div class="service-item reveal reveal-delay-4">
+      <div class="service-num">05</div>
+      <div class="service-name">Social & Content</div>
+      <div class="service-tags">
+        <span class="service-tag">Reels</span>
+        <span class="service-tag">Thumbnails</span>
+        <span class="service-tag">Kits</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<section id="brands">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label">Trusted By</div>
+      <h2 class="section-title">CLIENTS</h2>
+    </div>
+  </div>
+
+  <div class="brands-grid reveal">
+
+    <div class="brand-cell">
+      <div class="brand-logo-box">
+        <svg class="brand-icon" width="48" height="48" viewBox="0 0 48 48" fill="white">
+          <ellipse cx="24" cy="24" rx="18" ry="18" fill="none" stroke="white" stroke-width="2"/>
+          <path d="M14 24 Q19 14 24 24 Q29 34 34 24" fill="none" stroke="white" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="brand-name">Salesforce</div>
+      <div class="brand-type">Enterprise CRM</div>
+    </div>
+
+    <div class="brand-cell">
+      <div class="brand-logo-box">
+        <svg class="brand-icon" width="48" height="32" viewBox="0 0 120 50" fill="white">
+          <text x="5" y="40" font-family="serif" font-size="42" font-weight="bold" fill="white">SONY</text>
+        </svg>
+      </div>
+      <div class="brand-name">Sony</div>
+      <div class="brand-type">Consumer Electronics</div>
+    </div>
+
+    <div class="brand-cell">
+      <div class="brand-logo-box">
+        <svg class="brand-icon" width="48" height="48" viewBox="0 0 48 48" fill="white">
+          <rect x="4" y="4" width="40" height="40" rx="4" fill="none" stroke="white" stroke-width="2"/>
+          <text x="8" y="32" font-family="serif" font-size="20" font-weight="bold" fill="white">T-S</text>
+        </svg>
+      </div>
+      <div class="brand-name">T-Series</div>
+      <div class="brand-type">Music Label</div>
+    </div>
+
+    <div class="brand-cell">
+      <div class="brand-logo-box">
+        <svg class="brand-icon" width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="20" stroke="white" stroke-width="2"/>
+          <polygon points="20,16 34,24 20,32" fill="white"/>
+        </svg>
+      </div>
+      <div class="brand-name">JioCinema</div>
+      <div class="brand-type">OTT Streaming</div>
+    </div>
+
+    <div class="brand-cell">
+      <div class="brand-logo-box">
+        <svg class="brand-icon" width="48" height="32" viewBox="0 0 120 60" fill="white">
+          <text x="5" y="48" font-family="sans-serif" font-size="42" font-weight="900" fill="white">ZEE5</text>
+        </svg>
+      </div>
+      <div class="brand-name">Zee5</div>
+      <div class="brand-type">Digital Platform</div>
+    </div>
+
+    <div class="brand-cell">
+      <div class="brand-logo-box">
+        <svg class="brand-icon" width="32" height="48" viewBox="0 0 32 60" fill="white">
+          <polygon points="16,2 28,20 22,20 28,58 4,22 12,22" fill="rgba(255,220,0,0.8)"/>
+        </svg>
+      </div>
+      <div class="brand-name">BoltFit</div>
+      <div class="brand-type">Fitness Brand</div>
+    </div>
+
+    <div class="brand-cell">
+      <div class="brand-logo-box">
+        <svg class="brand-icon" width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <polygon points="24,3 45,15 45,33 24,45 3,33 3,15" stroke="rgba(255,204,0,0.8)" stroke-width="2" fill="none"/>
+          <circle cx="24" cy="24" r="6" fill="rgba(255,204,0,0.8)"/>
+        </svg>
+      </div>
+      <div class="brand-name">Blinkit</div>
+      <div class="brand-type">Quick Commerce</div>
+    </div>
+
+    <div class="brand-cell">
+      <div class="brand-logo-box">
+        <svg class="brand-icon" width="48" height="32" viewBox="0 0 80 50" fill="white">
+          <text x="5" y="40" font-family="serif" font-size="40" font-weight="900" fill="white">MG</text>
+        </svg>
+      </div>
+      <div class="brand-name">MG</div>
+      <div class="brand-type">Automotive</div>
+    </div>
+
+    <div class="brand-cell">
+      <div class="brand-logo-box">
+        <svg class="brand-icon" width="48" height="34" viewBox="0 0 48 34" fill="white">
+          <rect x="2" y="2" width="44" height="30" rx="6" fill="rgba(255,0,0,0.7)"/>
+          <polygon points="20,9 36,17 20,25" fill="white"/>
+        </svg>
+      </div>
+      <div class="brand-name">YouTube</div>
+      <div class="brand-type">Creator Ecosystem</div>
+    </div>
+
+    <div class="brand-cell">
+      <div class="brand-logo-box">
+        <svg class="brand-icon" width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="20" stroke="rgba(0,161,224,0.8)" stroke-width="2"/>
+          <path d="M14 24 Q19 14 24 24 Q29 34 34 24" stroke="rgba(0,161,224,0.8)" stroke-width="2" fill="none"/>
+          <circle cx="24" cy="8" r="3" fill="rgba(0,161,224,0.8)"/>
+        </svg>
+      </div>
+      <div class="brand-name">Dreamforce</div>
+      <div class="brand-type">Global Summit</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-bg"></div>
+  <div class="contact-label reveal">Let's Create Together</div>
+  <h2 class="contact-headline reveal reveal-delay-1">
+    LET'S<br><span class="outline">TALK</span>
+  </h2>
+  <a href="mailto:hello@kamatkreatives.com" class="contact-big-btn reveal reveal-delay-2">
+    Start a Project
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+  <div class="contact-links reveal reveal-delay-3">
+    <a href="mailto:hello@kamatkreatives.com" class="contact-link">
+      <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+      hello@kamatkreatives.com
+    </a>
+    <span style="color: rgba(255,255,255,0.1); font-family: var(--font-mono); font-size: 11px;">•</span>
+    <a href="https://github.com/kamatkreatives" class="contact-link">
+      <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      kamatkreatives
+    </a>
+    <span style="color: rgba(255,255,255,0.1); font-family: var(--font-mono); font-size: 11px;">•</span>
+    <a href="https://instagram.com/kamatkreatives" class="contact-link">
+      <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+      @kamatkreatives
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">KAMAT<span>.</span>K</div>
+  <div class="footer-copy">© 2024 Kamat Kreatives — All Rights Reserved</div>
+</footer>
+
+<script>
+  // ─── LOADER ───
+  const loader = document.getElementById('loader');
+  const loaderPct = document.getElementById('loader-pct');
+  let pct = 0;
+  const countUp = setInterval(() => {
+    pct = Math.min(pct + Math.random() * 15, 100);
+    loaderPct.textContent = Math.floor(pct) + '%';
+    if (pct >= 100) {
+      clearInterval(countUp);
+      setTimeout(() => {
+        loader.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        loader.style.opacity = '0';
+        loader.style.transform = 'translateY(-20px)';
+        setTimeout(() => { loader.style.display = 'none'; }, 600);
+      }, 300);
+    }
+  }, 50);
+
+  // ─── CURSOR ───
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top = my + 'px';
+  });
+
+  const lerpCursor = () => {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(lerpCursor);
+  };
+  lerpCursor();
+
+  // ─── PROGRESS BAR ───
+  const progressBar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (scrollTop / docHeight * 100) + '%';
+  });
+
+  // ─── PARALLAX ───
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    document.querySelectorAll('.parallax-slow').forEach(el => {
+      el.style.transform = `translateY(${scrollY * 0.15}px)`;
+    });
+  });
+
+  // ─── SCROLL REVEAL ───
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // ─── MAGNETIC BUTTONS ───
+  document.querySelectorAll('.contact-big-btn, .nav-logo').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const rect = btn.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) * 0.25;
+      const dy = (e.clientY - cy) * 0.25;
+      btn.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = '';
+    });
+  });
+
+  // ─── PARALLAX CARDS ───
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `perspective(1000px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+      card.style.transition = 'transform 0.5s ease';
+      setTimeout(() => card.style.transition = '', 500);
+    });
+  });
+
+  // ─── SCRAMBLE TEXT on HERO ───
+  const glitchEls = document.querySelectorAll('.glitch-wrap');
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  glitchEls.forEach(el => {
+    const original = el.dataset.text;
+    el.addEventListener('mouseenter', () => {
+      let iterations = 0;
+      const interval = setInterval(() => {
+        el.childNodes[0].textContent = original
+          .split('')
+          .map((ch, i) => i < iterations ? original[i] : chars[Math.floor(Math.random() * chars.length)])
+          .join('');
+        if (iterations >= original.length) clearInterval(interval);
+        iterations += 0.4;
+      }, 30);
+    });
+  });
+
+  // ─── STAT COUNTER ANIMATION ───
+  const statNums = document.querySelectorAll('.stat-num');
+  const statObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.textContent);
+        if (isNaN(target)) return;
+        const suffix = el.textContent.replace(/[0-9]/g, '');
+        let current = 0;
+        const step = target / 40;
+        const timer = setInterval(() => {
+          current = Math.min(current + step, target);
+          el.textContent = Math.round(current) + suffix;
+          if (current >= target) clearInterval(timer);
+        }, 35);
+        statObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  statNums.forEach(el => statObserver.observe(el));
+</script>
+</body>
+</html>
